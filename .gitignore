@@ -1,0 +1,19 @@
+# FVM Version Cache
+.fvm/
+
+# Environment secrets
+.env
+.env.production
+.env.staging
+
+# Flutter/Dart build files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+
+# IDE files
+.idea/
+*.iml
+.DS_Store
