@@ -40,6 +40,7 @@ class RecordingBar extends StatelessWidget {
       isListening: isListening,
       builder: (context, duration, formattedTime) {
         return Container(
+          key: const Key('audio-recording-bar'),
           width: double.infinity,
           padding: EdgeInsets.fromLTRB(
             24,
@@ -63,12 +64,16 @@ class RecordingBar extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 46,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: CustomColors.colorCBD5E0.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(100),
+              GestureDetector(
+                key: const Key('audio-stop-button'),
+                onTap: onStopTap,
+                child: Container(
+                  width: 46,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: CustomColors.colorCBD5E0.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -83,6 +88,7 @@ class RecordingBar extends StatelessWidget {
                 height: 60,
                 width: double.infinity,
                 child: WaveformView(
+                  key: const Key('audio-waveform'),
                   soundLevels: soundLevels,
                   duration: duration,
                   isListening: isListening,
@@ -99,6 +105,7 @@ class RecordingBar extends StatelessWidget {
                   width: double.infinity,
                   child: CustomText.base(
                     transcriptText,
+                    key: const Key('audio-transcript-text'),
                     fontSize: 20,
                     color: CustomColors.color1A202C,
                     textAlign: TextAlign.center,
@@ -107,6 +114,7 @@ class RecordingBar extends StatelessWidget {
               ),
               if (!isListening && hasText) ...[
                 GestureDetector(
+                  key: const Key('audio-send-button'),
                   onTap: () => _handleSend(context),
                   child: const Icon(
                     Icons.telegram,

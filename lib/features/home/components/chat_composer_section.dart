@@ -45,9 +45,11 @@ class _ChatComposerSectionState extends State<ChatComposerSection> {
     const isGranted = true;
 
     if (!isGranted) {
-      final permissionDialogResult = await CustomDialogProvider.instance.showPermissionDialog(
+      final permissionDialogResult =
+          await CustomDialogProvider.instance.showPermissionDialog(
         context,
-        message: 'Vui lòng cấp quyền Microphone và nhận diện giọng nói để sử dụng tính năng này!',
+        message:
+            'Vui lòng cấp quyền Microphone và nhận diện giọng nói để sử dụng tính năng này!',
       );
       if (permissionDialogResult == true) {
         per.openAppSettings();
@@ -166,6 +168,7 @@ class _ChatComposerSectionState extends State<ChatComposerSection> {
                   suffixIcon: Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: GestureDetector(
+                      key: const Key('audio-mic-button'),
                       onTap: () {
                         if (widget.isGenerating == true) return;
                         _openRecorder(context);
@@ -229,7 +232,9 @@ class _ChatComposerSectionState extends State<ChatComposerSection> {
                           ],
                   ),
                   child: Icon(
-                    widget.isGenerating == true ? Icons.stop : Icons.arrow_upward,
+                    widget.isGenerating == true
+                        ? Icons.stop
+                        : Icons.arrow_upward,
                     color: CustomColors.white,
                     size: 20,
                   ),

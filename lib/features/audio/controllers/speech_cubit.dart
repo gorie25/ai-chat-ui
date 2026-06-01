@@ -14,12 +14,19 @@ import '../enum/error_speech_type.dart';
 part 'speech_state.dart';
 
 class SpeechCubit extends Cubit<SpeechState> {
-  SpeechCubit() : super(const SpeechState()) {
+  SpeechCubit({
+    this.mockTickDuration = const Duration(milliseconds: 150),
+    void Function(int duration)? vibrate,
+  })  : _vibrate =
+            vibrate ?? ((duration) => Vibration.vibrate(duration: duration)),
+        super(const SpeechState()) {
     _init();
   }
 
   final SpeechToText _speech = SpeechToText();
   final LocalStorageManager _storage = LocalStorageManager.instance;
+  final Duration mockTickDuration;
+  final void Function(int duration) _vibrate;
 
   static const String _localeKey = 'last_used_locale';
   late String localeId;
@@ -103,7 +110,8 @@ class SpeechCubit extends Cubit<SpeechState> {
     if (isClosed) return;
     if (result.recognizedWords.isNotEmpty) {
       if (result.finalResult) {
-        emit(state.copyWith(text: result.recognizedWords, status: BlocStatus.success));
+        emit(state.copyWith(
+            text: result.recognizedWords, status: BlocStatus.success));
       } else {
         emit(state.copyWith(text: result.recognizedWords));
       }
@@ -146,7 +154,7 @@ class SpeechCubit extends Cubit<SpeechState> {
     if (isClosed) return;
 
     // Temporary simulation for screenshot/UI testing
-    Vibration.vibrate(duration: 50);
+    _vibrate(50);
     _tempSoundLevels.clear();
     _lastLevel = 0;
 
@@ -158,13 +166,13 @@ class SpeechCubit extends Cubit<SpeechState> {
 
     _mockTimer?.cancel();
     int count = 0;
-    _mockTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
+    _mockTimer = Timer.periodic(mockTickDuration, (timer) {
       if (isClosed) {
         timer.cancel();
         return;
       }
       count++;
-      
+
       // Generate standard realistic waves
       final double mockLevel = (count % 10) / 10.0;
       _onSoundLevelChange(mockLevel * 10);
