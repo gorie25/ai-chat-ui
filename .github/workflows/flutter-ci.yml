@@ -24,6 +24,16 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Create CI environment file
+        run: |
+          cat > .env <<'EOF'
+          AI_CHAT_API_URL=https://example.invalid/
+          AI_CHAT_WS_URL=wss://example.invalid/ws/
+          AI_CHAT_INTERNAL_TOKEN=ci-placeholder
+          AI_CHAT_AUTH_TOKEN=ci-placeholder
+          AI_CHAT_SHOW_IMAGE=true
+          EOF
+
       - name: Install dependencies
         run: flutter pub get
 
